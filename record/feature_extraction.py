@@ -1,12 +1,36 @@
-from keras.models import load_model
-import numpy as np
+import torch
+from PIL import Image
+from torchvision import transforms
+from facenet_pytorch import InceptionResnetV1
 
-# Assuming model is loaded: model = load_model('facenet_keras.h5')
 
-def extract_features(model, face_image):
-    face_image = face_image.astype('float32')
-    mean, std = face_image.mean(), face_image.std()
-    face_image = (face_image - mean) / std
-    samples = np.expand_dims(face_image, axis=0)
-    features = model.predict(samples)
+def preprocess_image(image_path):
+    # Load image and convert it to RGB
+    image = Image.open(image_path).convert('RGB')
+    
+    # Define transformations
+    transform = transforms.Compose([
+        transforms.Resize((160, 160)),  # Resize the image to 160x160 pixels
+        transforms.ToTensor(),  # Convert the image to a PyTorch tensor
+        transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  # Normalize the tensor
+    ])
+    
+    # Apply transformations
+    processed_image = transform(image).unsqueeze(0)  # Add batch dimension
+    return processed_image
+
+def extract_features(model, image_path):
+    
+    # Preprocess the image
+    processed_image = preprocess_image(image_path)
+    
+    # Use no_grad to prevent tracking history in autograd
+    with torch.no_grad():
+        # Model inference to get embeddings
+        features = model(processed_image)
     return features
+
+# # Example usage:
+# # Assuming you have an image at 'path/to/your/image.jpg'
+# features = extract_features('data/save_image/save_image.jpg')
+# print(features)

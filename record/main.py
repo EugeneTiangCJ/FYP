@@ -4,6 +4,7 @@ from camera import capture_image
 from face_detection import detect_face
 from feature_extraction import extract_features
 from keras.models import load_model
+from facenet_pytorch import InceptionResnetV1
 
 def main():
     # Step 1: Capture an image from the camera
@@ -16,15 +17,15 @@ def main():
 
 
     # Step 2: Detect face in the image
-    face = detect_face(to_save_image)
-    if face is None:
-        print("No face detected.")
-        return
+    # face = detect_face(to_save_image)
+    # if face is None:
+    #     print("No face detected.")
+    #     return
 
-    model = load_model('model/keras/facenet_keras.h5')
+    model = InceptionResnetV1(pretrained='vggface2').eval()
     # Step 3: Extract features from the detected face
-    features = extract_features(model, face)
-    if features is None:
+    features = extract_features(model, 'data/save_image/save_image.jpg')
+    if features is None:    
         print("Feature extraction failed.")
         return
 

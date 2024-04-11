@@ -6,14 +6,15 @@ from feature_extraction import extract_features
 from face_matching import match_face
 from keras.models import load_model
 from database import load_database_features
+from facenet_pytorch import InceptionResnetV1
 
 def main():
     image = capture_image()
     to_read_image = cv2.imread('data/input_image/input_image.jpg')
     face_image = detect_face(to_read_image)
     if face_image is not None:
-        model = load_model('model/keras/facenet_keras.h5')  # This would be your pre-trained model
-        features = extract_features(model, face_image)
+        model = InceptionResnetV1(pretrained='vggface2').eval()
+        features = extract_features(model, 'data/input_image/input_image.jpg')
         database_features = load_database_features()
         if match_face(features, database_features):
             print("Access Granted")
