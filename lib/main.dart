@@ -10,8 +10,14 @@ import 'package:frontend/screens/HomeScreen.dart';
 import 'package:frontend/screens/LoginScreen.dart';
 import 'package:frontend/screens/NewUserRegistrationScreen.dart';
 import 'package:frontend/screens/ProfileScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,)
+  // .then(
+  //   (Firebase value) => Get.put(AuthenticationRepository()),)
+    ;
    runApp(MyApp());
   }
 
