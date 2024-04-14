@@ -1,13 +1,16 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,12 +24,16 @@ class MyApp extends StatelessWidget {
 }
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
   ImageProvider _profileImage = AssetImage('assets/default_avatar.png');
+
+  final user = FirebaseAuth.instance.currentUser!;
 
   Future<void> _changeProfilePicture() async {
     final ImagePicker _picker = ImagePicker();
@@ -43,11 +50,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: 20),
+
+          const SizedBox(height: 20),
+
           GestureDetector(
             onTap: _changeProfilePicture,
             child: CircleAvatar(
@@ -55,22 +65,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
               backgroundImage: _profileImage,
             ),
           ),
-          SizedBox(height: 20),
-          Text(
-            'Email',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+
+          const SizedBox(height: 50),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Email: ${user.email!}',
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          Text(
-            'xxx@gmail.com', // User's email address
-            style: TextStyle(fontSize: 16),
-          ),
-          SizedBox(height: 20),
+            ],
+          ), 
+        
+          const SizedBox(height: 70),
+          
           ElevatedButton(
             onPressed: () {
               // Navigate to edit password page
               Navigator.pushNamed(context, '/editpassword');
             },
-            child: Text('Edit Password'),
+            child: const Text('Edit Password'),
           ),
         ],
       ),
