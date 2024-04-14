@@ -10,9 +10,17 @@ import 'package:frontend/screens/HomeScreen.dart';
 import 'package:frontend/screens/LoginScreen.dart';
 import 'package:frontend/screens/NewUserRegistrationScreen.dart';
 import 'package:frontend/screens/ProfileScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:frontend/screens/auth_page.dart';
+import 'firebase_options.dart';
 
-void main() {
-   runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,)
+  // .then(
+    // (Firebase value) => Get.put(AuthenticationRepository()),)
+    ;
+   runApp( const MyApp());
   }
 
 class MyApp extends StatelessWidget {
@@ -24,7 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       // theme: ThemeData(primarySwatch: Colors.green),
-      home: LoginScreen(),
+      home: AuthPage(),
       routes:{
         '/login':(context) => LoginScreen(),
         '/forgotpassword': (context) => ForgotPasswordScreen(),

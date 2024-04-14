@@ -1,30 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Navigation Drawer Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: HomeScreen(),
-    );
-  }
-}
-
 class HomeScreen extends StatelessWidget {
+  const HomeScreen ({super.key});
+
+  void signUserOut() {
+    FirebaseAuth.instance.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Navigation Drawer Example"),
+        title: const Text("Home"),
       ),
       drawer: Drawer(
         child: ListView(
@@ -35,7 +24,7 @@ class HomeScreen extends StatelessWidget {
                 color: Colors.green,
               ),
               child: Text(
-                'Drawer Header',
+                'FaceLockApp',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -43,8 +32,8 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Profile'),
+              leading: const Icon(Icons.account_circle),
+              title: const Text('Profile'),
               onTap: () {
                 // Update the state of the app
                 // ...
@@ -54,8 +43,8 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.book),
-              title: Text('Guidelines'),
+              leading: const Icon(Icons.book),
+              title: const Text('Guidelines'),
               onTap: () {
                 // Update the state of the app
                 // ...
@@ -64,8 +53,8 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.feedback),
-              title: Text('Feedback'),
+              leading: const Icon(Icons.feedback),
+              title: const Text('Feedback'),
               onTap: () {
                 // Update the state of the app
                 // ...
@@ -74,29 +63,25 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.camera_alt),
-              title: Text('Face Record'),
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Face Record'),
               onTap: () {
                 // Update the state of the app
                 // ...
                 Navigator.pop(context);
               },
             ),
-            Divider(),
+            const Divider(),
+
             ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/login');
-              },
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: signUserOut,
             ),
           ],
         ),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Main Page Content Here'),
       ),
     );
