@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home"),
+        backgroundColor: Colors.grey[700],
       ),
       drawer: Drawer(
         child: ListView(
@@ -83,6 +84,11 @@ class HomeScreen extends StatelessWidget {
       ),
       body: const Center(
         child: Text('Main Page Content Here'),
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        child: const Icon(Icons.add),
       ),
     );
   }

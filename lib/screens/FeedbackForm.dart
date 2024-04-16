@@ -1,10 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/components/MyButton.dart';
+import 'package:frontend/components/MyTextField.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,89 +24,113 @@ class MyApp extends StatelessWidget {
 }
 
 class FeedbackForm extends StatefulWidget {
+  const FeedbackForm({super.key});
+
   @override
   _FeedbackFormState createState() => _FeedbackFormState();
 }
 
 class _FeedbackFormState extends State<FeedbackForm> {
-  final _formKey = GlobalKey<FormState>();
-  String _name = '';
-  String _email = '';
-  String _feedback = '';
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final feedbackController = TextEditingController();
 
-  bool _isEmailValid(String email) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern as String);
-    return regex.hasMatch(email);
-  }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      // If all data are correct then save data to out variables
-      _formKey.currentState!.save();
-      // API call or state management logic to handle the submitted feedback
-      // ...
+  void submitFeedback() async{
+    try{
+      await FirebaseFirestore.instance
+      .collection("feedback")
+      .add({
+        'name': nameController.text.trim(),
+        'email': emailController.text.trim(),
+        'feedback': feedbackController.text
+      });
+
+      // showDialog(
+      //   context: context, 
+      //   builder: (context) {
+      //     return const AlertDialog(
+      //       backgroundColor: Colors.deepPurple,
+      //       title: Center(
+      //         child: Text(
+      //           'Submit Successfully!',
+      //           style: TextStyle(color: Colors.white)
+      //         ),
+      //       ),
+      //     );
+      //   }
+      // );
+      
+      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, '/home'); // Navigate to HomeScreen
+    } on FirebaseAuthException catch(e){
+      showErrorMessage(e.message.toString());
     }
+    
   }
+
+  void showErrorMessage(String message){
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.deepPurple,
+          title: Center(
+            child: Text(
+              message,
+              style: const TextStyle(color: Colors.white)
+            ),
+          ),
+        );
+      }
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Feedback'),
+        title: const Text('Feedback'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  border: OutlineInputBorder(),
-                ),
-                onSaved: (value) => _name = value!,
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty || !_isEmailValid(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _email = value!,
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Feedback',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 5,
-                onSaved: (value) => _feedback = value!,
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text('Submit'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Go back to previous screen
-                },
-                child: Text('Cancel'),
-              ),
-            ],
+      body: Column(
+        children: [
+          MyTextField(
+            controller: nameController, 
+            hintText: 'Name', 
+            obscureText: false),
+
+          const SizedBox(height: 25,),
+
+          MyTextField(
+            controller: emailController, 
+            hintText: 'Email', 
+            obscureText: false),
+
+          const SizedBox(height: 25,),
+          
+          MyTextField(
+            controller: feedbackController, 
+            hintText: 'Feedback', 
+            obscureText: false),
+
+          const SizedBox(height: 50,),
+
+          MyButton(
+            onTap: submitFeedback, 
+            text: 'Submit'
           ),
-        ),
-      ),
+
+          const SizedBox(height: 50,),
+
+          MyButton(
+            onTap: (){
+              Navigator.pushNamed(context, '/home');
+            }, 
+            text: 'Cancel'
+          )
+        ],
+      )
     );
   }
 }

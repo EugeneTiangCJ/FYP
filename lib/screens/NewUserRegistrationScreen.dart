@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend/components/MyButton.dart';
 import 'package:frontend/components/MyTextField.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NewUserRegistrationScreen extends StatefulWidget {
 
@@ -31,9 +32,18 @@ class _NewUserRegistrationScreenState extends State<NewUserRegistrationScreen> {
     
     try{
       if(passwordController.text == confirmPasswordController.text){
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text
-        );
+        UserCredential userCredential = 
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text
+          );
+
+          await FirebaseFirestore.instance
+            .collection("users")
+            .add({
+              'email': userCredential.user!.email,
+              'username': emailController.text.split('@')[0]
+            });
+
 
         Navigator.pop(context);
         Navigator.pushReplacementNamed(context, '/home'); // Navigate to HomeScreen
