@@ -87,7 +87,9 @@ class HomeScreen extends StatelessWidget {
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: (){
+          Navigator.pushNamed(context, '/installapp');
+        },
         child: const Icon(Icons.add),
       ),
     );

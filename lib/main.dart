@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:frontend/screens/AppScreen.dart';
 import 'package:frontend/screens/EditPasswordScreen.dart';
 import 'package:frontend/screens/FeedbackForm.dart';
 import 'package:frontend/screens/ForgotPasswordScreen.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/guidelines':(context) => GuidelinesScreen(),
         '/feedback':(context) => FeedbackForm(),
         '/editpassword':(context) => EditPasswordScreen(),
+        '/installapp': (context) => InstalledAppsScreen(),
       },
     );
   }
