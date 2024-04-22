@@ -3,10 +3,9 @@ from PIL import Image
 from torchvision import transforms
 from facenet_pytorch import InceptionResnetV1
 
-
 def preprocess_image(image_path):
     # Load image and convert it to RGB
-    image = Image.open(image_path).convert('RGB')
+    image = Image.fromarray(image_path).convert('RGB')
     
     # Define transformations
     transform = transforms.Compose([
@@ -19,10 +18,9 @@ def preprocess_image(image_path):
     processed_image = transform(image).unsqueeze(0)  # Add batch dimension
     return processed_image
 
-def extract_features(model, image_path):
-    
+def extract_features(model, image):
     # Preprocess the image
-    processed_image = preprocess_image(image_path)
+    processed_image = preprocess_image(image)
     
     # Use no_grad to prevent tracking history in autograd
     with torch.no_grad():
@@ -32,5 +30,5 @@ def extract_features(model, image_path):
 
 # # Example usage:
 # # Assuming you have an image at 'path/to/your/image.jpg'
-# features = extract_features('data/save_image/save_image.jpg')
+# features = extract_features(InceptionResnetV1(pretrained='vggface2').eval(), 'data/save_image/save_image.jpg')
 # print(features)

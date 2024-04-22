@@ -2,7 +2,7 @@ import cv2
 from face_detection import detect_face
 
 # Load the image
-image = cv2.imread('data/input_image/input_image.jpg')
+image = cv2.imread('data/save_image/save_image.jpg')
 
 # Perform face detection
 result_image, faces = detect_face(image)
