@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:frontend/screens/AppScreen.dart';
 import 'package:frontend/screens/EditPasswordScreen.dart';
 import 'package:frontend/screens/FeedbackForm.dart';
@@ -13,6 +10,7 @@ import 'package:frontend/screens/NewUserRegistrationScreen.dart';
 import 'package:frontend/screens/ProfileScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:frontend/screens/auth_page.dart';
+import 'package:frontend/screens/face_record_screen.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -44,6 +42,7 @@ class MyApp extends StatelessWidget {
         '/feedback':(context) => FeedbackForm(),
         '/editpassword':(context) => EditPasswordScreen(),
         '/installapp': (context) => InstalledAppsScreen(),
+        // '/facerecord': (context) => FaceRecordScreen(),
       },
     );
   }

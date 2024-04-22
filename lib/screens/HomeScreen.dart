@@ -1,5 +1,7 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/face_record_screen.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -66,10 +68,14 @@ class HomeScreen extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.camera_alt),
               title: const Text('Face Record'),
-              onTap: () {
+              onTap: () async {
                 // Update the state of the app
                 // ...
-                Navigator.pop(context);
+// 在你的主页面或其他适当的地方
+                List<CameraDescription> cameras = await availableCameras();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => FaceRecordScreen(cameras: cameras)));
+
+
               },
             ),
             const Divider(),

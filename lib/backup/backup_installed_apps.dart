@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
 import 'package:device_apps/device_apps.dart';
-import 'package:frontend/screens/face_recognition_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../screens/auth_service.dart';
 import 'package:http/http.dart' as http;
 
 class InstalledAppsScreen extends StatefulWidget {
@@ -57,38 +56,35 @@ class _InstalledAppsScreenState extends State<InstalledAppsScreen> {
     });
   }
 
-  Future<void> launchApp(Application app) async {
+ Future<void> launchApp(Application app) async {
     bool shouldAuthenticate = switchStates[app.packageName] ?? false;
 
     if (shouldAuthenticate) {
-      final result = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => FaceRecognitionScreen()),
-      );
-
-      if (result) {
-        DeviceApps.openApp(app.packageName);
-      } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Authentication Failed'),
-              content: const Text('Please retry.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Retry'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
+      checkMatch().then((matchResult) {
+        if (matchResult) {
+          DeviceApps.openApp(app.packageName);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Authentication failed, retry!'))
+          );
+        }
+      });
     } else {
       DeviceApps.openApp(app.packageName);
+    }
+  }
+
+  Future<bool> checkMatch() async {
+    var uri = Uri.parse('http://192.168.1.10:5000/compare');
+    var response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      bool match = data['Match'];
+      return match;
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      return false;
     }
   }
 

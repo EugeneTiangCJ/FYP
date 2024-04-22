@@ -15,13 +15,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: GuidelinesScreen(),
+      home: const GuidelinesScreen(),
     );
   }
 }
 
 class GuidelinesScreen extends StatelessWidget {
-  GuidelinesScreen({super.key});
+  const GuidelinesScreen({super.key});
 
   // List <String> docIDs = [];
 

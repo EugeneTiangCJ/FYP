@@ -40,6 +40,11 @@ dependencies:
   firebase_auth: ^4.19.1
   cloud_firestore: ^4.16.1
   device_apps: ^2.2.0
+  local_auth: ^2.2.0
+  shared_preferences: ^2.2.3
+  http: ^1.2.1
+  camera: ^0.10.5+9
+  http_parser: ^4.0.2
   
 
 dev_dependencies:
